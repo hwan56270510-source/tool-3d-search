@@ -13,3 +13,6 @@ CNN_drive_V1/
 CNN_drive_V2/
 CNN_PBL/
 colmap/
+
+# 라벨링 도구 SAM 가중치 (없으면 자동 다운로드)
+labeling/weights/
