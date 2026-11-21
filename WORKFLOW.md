@@ -44,14 +44,14 @@
 2. `lift3d/lift_to_3d.py`로 COLMAP 카메라 + 3DGS point_cloud.ply + `results.jsonl`을 합쳐 공구별 3D 위치 계산
    ```
    python lift3d/lift_to_3d.py --results results.jsonl --colmap gs_data/sparse/0 \
-       --ply point_cloud.ply --images gs_data/images --out_dir runs/objects_3d
+       --ply point_cloud.ply --images gs_data/images --out_dir runs/objects_3d_v2
    ```
    → 여러 시점에서 보이는 Gaussian을 마스크로 투표해서 물체 Gaussian을 정하고, 중심/회전박스(OBB)/반경/클로즈업 시점까지 계산 (자세한 원리는 `lift3d/README.md`)
-3. 결과: `runs/objects_3d/objects.json` (공구별 3D 위치) + `*_check.jpg` (확인용 그림)
+3. 결과: `runs/objects_3d_v2/objects.json` (공구별 3D 위치) + `*_check.jpg` (확인용 그림)
 
 ## 최종 결과 (2026-11-14 기준)
 - CNN 분류기: test accuracy 95.6%, k-fold(4개) 평균 95.0% (`runs/cnn_rgb128_classroom_v2_final`, `runs/cnn_rgb128_margin05_noearlystop_fold*`)
-- 3D 위치: `runs/objects_3d/objects.json` — drill/hammer/clamp 3종 전부 계산 완료 (검출 프레임 72~102장, inlier 63~97장)
+- 3D 위치: `runs/objects_3d_v2/objects.json` — drill/hammer/clamp 3종 전부 계산 완료 (검출 프레임 72~102장, inlier 63~97장)
 
 ## 참고
 - 세 파트 모두 각자 환경에서 독립적으로 돌아가며, 공유하는 건 이미지 파일 + JSON 파일뿐이다.

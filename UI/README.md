@@ -17,7 +17,7 @@ pip install viser numpy scipy opencv-python-headless pyyaml
 |---|---|---|
 | 3DGS point cloud | `gs_data/point_cloud.ply` | `lift3d`와 같은 ply |
 | COLMAP 모델 | `colmap/` (`cameras.bin`+`images.bin`, 또는 `.txt`) | 3DGS용 사진(`gs_data/images`) 기준 포즈 |
-| 3D 위치 결과 | `runs/objects_3d/objects.json` | `lift3d/lift_to_3d.py` 출력 |
+| 3D 위치 결과 | `runs/objects_3d_v2/objects.json` | `lift3d/lift_to_3d.py` 출력 |
 
 ## 3. 실행
 
@@ -44,6 +44,20 @@ python UI/app.py --ply gs_data/point_cloud.ply --colmap colmap --objects runs/ob
 - **도착 후 좌우로 살짝 둘러보기**: 체크하면 도착 후 공구를 바라본 채로 ±17.5도 좌우로 천천히 흔들림 (끄면 도착한 자리에 고정)
 - 도착하면 공구 위치에 노란 박스 + 이름표가 표시됨
 
+## app_v2.py (재고관리 포함 버전)
+
+같은 입력(`--ply`, `--colmap`, `--objects`)에 `--inventory` 하나가 추가된다. 공구별 수량을
+기록해서 전부/일부/전량 반출 상태를 박스 색(초록/주황/빨강)과 배터리 모양 칸으로 표시하고,
+반출/반납 기록을 남길 수 있다.
+
+```bash
+python UI/app_v2.py --ply gs_data/point_cloud.ply --colmap colmap --objects runs/objects_3d_v2/objects.json \
+  --inventory runs/inventory.json --location "1공학관 C302호 연구실 창고"
+```
+
+`--inventory`로 준 파일이 없으면 공구마다 수량 1개로 새로 만든다. 수량은 그 파일의
+`items.<공구>.total` 값을 직접 고치면 된다.
+
 ## 참고
 - 3D 위치 계산(`lift3d`) 쪽 코드/방법은 `lift3d/README.md` 참고.
-- 카메라/가우시안 수학은 `UI/app.py` 안에 전부 있고 (COLMAP 리더는 `lift3d/lift_to_3d.py`의 것을 재사용), 외부 라이브러리는 viser/numpy/scipy/opencv/pyyaml뿐이다.
+- 카메라/가우시안 수학은 `UI/app.py`, `UI/app_v2.py` 안에 전부 있고 (COLMAP 리더는 `lift3d/lift_to_3d.py`의 것을 재사용), 외부 라이브러리는 viser/numpy/scipy/opencv/pyyaml뿐이다.
