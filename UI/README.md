@@ -58,6 +58,26 @@ python UI/app_v2.py --ply gs_data/point_cloud.ply --colmap colmap --objects runs
 `--inventory`로 준 파일이 없으면 공구마다 수량 1개로 새로 만든다. 수량은 그 파일의
 `items.<공구>.total` 값을 직접 고치면 된다.
 
+## app_v3.py (3D 라벨 카드 버전, viser==1.1.0 전용)
+
+입력/사용법은 `app_v2.py`와 같다. 다른 점은 오른쪽 패널 정보를 **물체 바로 옆 3D 카드**로도
+띄워준다는 것 — 모서리에 괄호 모양 강조 표시가 생기고, 도착(둘러보기 시작)하면 그 물체 옆에
+아이콘+상태+배터리 막대가 있는 카드가 뜬다.
+
+**주의: `viser==1.1.0`에서만 된다.** `1.1.1`에서는 3D 공간에 HTML을 띄우는 기능
+(`add_3d_gui_container`+`add_html`) 자체가 깨져 있어서(`its-fine: useFiber must be called
+within a <FiberProvider />` 에러), 카드가 아예 안 뜬다. 그래서 `app.py`/`app_v2.py`랑 별도
+환경을 하나 더 쓴다.
+
+```bash
+conda create -n viewer_card python=3.10 -y
+conda activate viewer_card
+pip install viser==1.1.0 numpy scipy opencv-python-headless pyyaml
+
+python UI/app_v3.py --ply gs_data/point_cloud.ply --colmap colmap --objects runs/objects_3d_v2/objects.json \
+  --inventory runs/inventory.json --location "1공학관 C302호 연구실 창고"
+```
+
 ## 참고
 - 3D 위치 계산(`lift3d`) 쪽 코드/방법은 `lift3d/README.md` 참고.
 - 카메라/가우시안 수학은 `UI/app.py`, `UI/app_v2.py` 안에 전부 있고 (COLMAP 리더는 `lift3d/lift_to_3d.py`의 것을 재사용), 외부 라이브러리는 viser/numpy/scipy/opencv/pyyaml뿐이다.
