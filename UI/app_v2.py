@@ -237,7 +237,7 @@ def draw_object(key):
         fill_handles[key].visible = (st == "empty")
     else:
         fill_handles[key] = server.scene.add_box(f"/obj_{key}/fill", color=COLOR_EMPTY, dimensions=tuple(ext * 1.02),
-                                                  opacity=0.3, cast_shadow=False, receive_shadow=False,
+                                                  opacity=0.85, cast_shadow=False, receive_shadow=False,
                                                   position=tuple(center), wxyz=quat_from_axes(obb["axes"]),
                                                   visible=(st == "empty"))
 
