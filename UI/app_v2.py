@@ -108,6 +108,10 @@ def image_pose(name):
 home_pos, home_lookat = image_pose(home_name)
 print(f"[load] 처음 시점 = {home_name}")
 
+# 이동 중 떠오르는 높이가 천장을 뚫지 않도록, 촬영 당시 카메라가 실제로 도달했던 최대 높이로 제한
+cam_centers = np.array([-qvec2rotmat(q).T @ t for q, t, _ in imgs.values()])
+max_cam_height = float(np.percentile(cam_centers @ scene_up, 97))  # 이상치 약간 제외
+
 print("[load] objects.json ...")
 objects = utils.load_json(args.objects)["objects"]
 
@@ -507,6 +511,9 @@ def animate_loop():
             e = ease(t)
             bump = ARC_HEIGHT * np.linalg.norm(pos1 - pos0) * np.sin(np.pi * t)
             pos = pos0 + (pos1 - pos0) * e + scene_up * bump
+            over = float(pos @ scene_up) - max_cam_height  # 천장 위로 못 뚫게 누르기
+            if over > 0:
+                pos = pos - scene_up * over
             look = look0 + (look1 - look0) * e
             for c in server.get_clients().values():
                 c.camera.position = pos
